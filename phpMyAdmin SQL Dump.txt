@@ -1,0 +1,308 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.5
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Jul 02, 2019 at 09:29 AM
+-- Server version: 5.7.25
+-- PHP Version: 7.3.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `TutorMe`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ConnectSTC`
+--
+
+CREATE TABLE `ConnectSTC` (
+  `sid` bigint(4) UNSIGNED NOT NULL,
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `cid` bigint(4) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ConnectSTC`
+--
+
+INSERT INTO `ConnectSTC` (`sid`, `tid`, `cid`) VALUES
+(1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Course`
+--
+
+CREATE TABLE `Course` (
+  `cid` bigint(4) UNSIGNED NOT NULL,
+  `did` int(4) UNSIGNED NOT NULL,
+  `cname` varchar(50) NOT NULL,
+  `ccode` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Course`
+--
+
+INSERT INTO `Course` (`cid`, `did`, `cname`, `ccode`) VALUES
+(1, 1, 'Data Structures and Algorithm 1', 'CMPT 225'),
+(2, 2, 'Introduction to Business', 'BUS 201');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Department`
+--
+
+CREATE TABLE `Department` (
+  `did` int(4) UNSIGNED NOT NULL,
+  `dname` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Department`
+--
+
+INSERT INTO `Department` (`did`, `dname`) VALUES
+(1, 'CMPT'),
+(2, 'BUS');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Student`
+--
+
+CREATE TABLE `Student` (
+  `sid` bigint(4) UNSIGNED NOT NULL,
+  `fname` varchar(10) NOT NULL,
+  `lname` varchar(10) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone` bigint(11) NOT NULL,
+  `gender` varchar(5) NOT NULL,
+  `major` varchar(20) NOT NULL,
+  `school` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Student`
+--
+
+INSERT INTO `Student` (`sid`, `fname`, `lname`, `email`, `phone`, `gender`, `major`, `school`) VALUES
+(1, 'Kazi', 'Dhrubo', 'zubayerkader@yahoo.com', 7789397961, 'male', 'CMPT', 'SFU');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `StudentLogin`
+--
+
+CREATE TABLE `StudentLogin` (
+  `sid` bigint(4) UNSIGNED NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `StudentLogin`
+--
+
+INSERT INTO `StudentLogin` (`sid`, `email`, `password`) VALUES
+(1, 'zubayerkader@yahoo.com', '*84AAC12F54AB666ECFC2A83C676908C8BBC381B1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Tutor`
+--
+
+CREATE TABLE `Tutor` (
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `fname` varchar(10) NOT NULL,
+  `lname` varchar(10) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone` bigint(11) UNSIGNED NOT NULL,
+  `gender` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Tutor`
+--
+
+INSERT INTO `Tutor` (`tid`, `fname`, `lname`, `email`, `phone`, `gender`) VALUES
+(1, 'Raad', 'Sarar', 'msarar@sfu.ca', 7789299562, 'male');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `TutorLogin`
+--
+
+CREATE TABLE `TutorLogin` (
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `TutorLogin`
+--
+
+INSERT INTO `TutorLogin` (`tid`, `email`, `password`) VALUES
+(1, 'msarar@sfu.ca', '*84AAC12F54AB666ECFC2A83C676908C8BBC381B1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `TutorToCourse`
+--
+
+CREATE TABLE `TutorToCourse` (
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `cid` bigint(4) UNSIGNED NOT NULL,
+  `qualification` varchar(20) NOT NULL,
+  `rating` float NOT NULL,
+  `location` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `TutorToCourse`
+--
+
+INSERT INTO `TutorToCourse` (`tid`, `cid`, `qualification`, `rating`, `location`) VALUES
+(1, 1, 'Undergrad Student', 4.9, 'Burnaby');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ConnectSTC`
+--
+ALTER TABLE `ConnectSTC`
+  ADD KEY `sid` (`sid`) USING HASH,
+  ADD KEY `tid` (`tid`) USING HASH,
+  ADD KEY `cid` (`cid`) USING HASH;
+
+--
+-- Indexes for table `Course`
+--
+ALTER TABLE `Course`
+  ADD PRIMARY KEY (`cid`) USING HASH,
+  ADD UNIQUE KEY `cname` (`cname`),
+  ADD UNIQUE KEY `ccode` (`ccode`),
+  ADD KEY `(did,cid)` (`did`,`cid`);
+
+--
+-- Indexes for table `Department`
+--
+ALTER TABLE `Department`
+  ADD PRIMARY KEY (`did`);
+
+--
+-- Indexes for table `Student`
+--
+ALTER TABLE `Student`
+  ADD PRIMARY KEY (`sid`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `StudentLogin`
+--
+ALTER TABLE `StudentLogin`
+  ADD UNIQUE KEY `sid` (`sid`),
+  ADD UNIQUE KEY `email` (`email`) USING HASH;
+
+--
+-- Indexes for table `Tutor`
+--
+ALTER TABLE `Tutor`
+  ADD PRIMARY KEY (`tid`) USING HASH,
+  ADD UNIQUE KEY `email` (`email`) USING HASH;
+
+--
+-- Indexes for table `TutorLogin`
+--
+ALTER TABLE `TutorLogin`
+  ADD UNIQUE KEY `tid` (`tid`),
+  ADD UNIQUE KEY `email` (`email`) USING HASH;
+
+--
+-- Indexes for table `TutorToCourse`
+--
+ALTER TABLE `TutorToCourse`
+  ADD UNIQUE KEY `cid` (`cid`),
+  ADD UNIQUE KEY `tid` (`tid`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `Course`
+--
+ALTER TABLE `Course`
+  MODIFY `cid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `Department`
+--
+ALTER TABLE `Department`
+  MODIFY `did` int(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `Student`
+--
+ALTER TABLE `Student`
+  MODIFY `sid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `Tutor`
+--
+ALTER TABLE `Tutor`
+  MODIFY `tid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `ConnectSTC`
+--
+ALTER TABLE `ConnectSTC`
+  ADD CONSTRAINT `connectstc_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `Student` (`sid`),
+  ADD CONSTRAINT `connectstc_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`),
+  ADD CONSTRAINT `connectstc_ibfk_3` FOREIGN KEY (`cid`) REFERENCES `Course` (`cid`);
+
+--
+-- Constraints for table `Course`
+--
+ALTER TABLE `Course`
+  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`did`) REFERENCES `Department` (`did`);
+
+--
+-- Constraints for table `StudentLogin`
+--
+ALTER TABLE `StudentLogin`
+  ADD CONSTRAINT `studentlogin_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `Student` (`sid`),
+  ADD CONSTRAINT `studentlogin_ibfk_2` FOREIGN KEY (`email`) REFERENCES `Student` (`email`);
+
+--
+-- Constraints for table `TutorLogin`
+--
+ALTER TABLE `TutorLogin`
+  ADD CONSTRAINT `tutorlogin_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`),
+  ADD CONSTRAINT `tutorlogin_ibfk_2` FOREIGN KEY (`email`) REFERENCES `Tutor` (`email`);
+
+--
+-- Constraints for table `TutorToCourse`
+--
+ALTER TABLE `TutorToCourse`
+  ADD CONSTRAINT `tutortocourse_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`),
+  ADD CONSTRAINT `tutortocourse_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `Course` (`cid`);

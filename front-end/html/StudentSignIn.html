@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Student Login</title>
+		<link rel="stylesheet/css" href="../styles/StudentSignIn.css">
+		<script src="../scripts/main.js"></script>
+	</head>
+
+	<body>
+		<main class="StudentSignIn">
+			<p>SignIn</p>
+			<form action="" method="POST" id="SignInform" onsubmit="studentSignIn()">
+				<div id="email">
+					<label for="email">Email: </label>
+					<input type="text" name="email" required></input>
+				</div>
+				<div id="pass">
+					<label for="pass">Password: </label>
+					<input type="password" name="pass" minlength="8" required></input>
+				</div>
+				<div id="SignIn">
+					<input type="submit" value="SignIn"></input>
+				</div>
+			</form>
+			<p><a href="./StudentSignUp.html">SignUp if you don't have an account!</a></p>
+		</main>
+		
+	</body>
+
+	<footer>
+
+	</footer>
+
+</html>
