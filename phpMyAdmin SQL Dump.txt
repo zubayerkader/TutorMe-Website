@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 02, 2019 at 09:29 AM
+-- Generation Time: Aug 02, 2019 at 03:13 AM
 -- Server version: 5.7.25
 -- PHP Version: 7.3.1
 
@@ -11,8 +11,15 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
+-- Database: `abcd`
+--
+CREATE DATABASE IF NOT EXISTS `abcd` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `abcd`;
+--
 -- Database: `TutorMe`
 --
+CREATE DATABASE IF NOT EXISTS `TutorMe` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `TutorMe`;
 
 -- --------------------------------------------------------
 
@@ -23,15 +30,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `ConnectSTC` (
   `sid` bigint(4) UNSIGNED NOT NULL,
   `tid` bigint(4) UNSIGNED NOT NULL,
-  `cid` bigint(4) UNSIGNED NOT NULL
+  `cid` bigint(4) UNSIGNED NOT NULL,
+  `appointment` datetime(6) DEFAULT NULL,
+  `location` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ConnectSTC`
 --
 
-INSERT INTO `ConnectSTC` (`sid`, `tid`, `cid`) VALUES
-(1, 1, 1);
+INSERT INTO `ConnectSTC` (`sid`, `tid`, `cid`, `appointment`, `location`) VALUES
+(1, 1, 1, '2019-07-19 02:30:00.000000', 'sfu'),
+(1, 2, 3, '2019-07-22 04:00:00.000000', 'duthie ave');
 
 -- --------------------------------------------------------
 
@@ -52,7 +62,8 @@ CREATE TABLE `Course` (
 
 INSERT INTO `Course` (`cid`, `did`, `cname`, `ccode`) VALUES
 (1, 1, 'Data Structures and Algorithm 1', 'CMPT 225'),
-(2, 2, 'Introduction to Business', 'BUS 201');
+(2, 2, 'Introduction to Business', 'BUS 201'),
+(3, 1, 'Database Systems 2', 'CMPT 454');
 
 -- --------------------------------------------------------
 
@@ -76,6 +87,45 @@ INSERT INTO `Department` (`did`, `dname`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Location`
+--
+
+CREATE TABLE `Location` (
+  `lid` int(4) UNSIGNED NOT NULL,
+  `location` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Location`
+--
+
+INSERT INTO `Location` (`lid`, `location`) VALUES
+(1, 'any'),
+(2, 'Burnaby');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Request`
+--
+
+CREATE TABLE `Request` (
+  `sid` bigint(4) UNSIGNED NOT NULL,
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `cid` bigint(4) UNSIGNED NOT NULL,
+  `time` json NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Request`
+--
+
+INSERT INTO `Request` (`sid`, `tid`, `cid`, `time`) VALUES
+(1, 2, 3, '[{\"to\": \"\", \"hrs\": null, \"date\": \"\", \"from\": \"\", \"mins\": null, \"location\": \"\"}]');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Student`
 --
 
@@ -85,8 +135,8 @@ CREATE TABLE `Student` (
   `lname` varchar(10) NOT NULL,
   `email` varchar(50) NOT NULL,
   `phone` bigint(11) NOT NULL,
-  `gender` varchar(5) NOT NULL,
-  `major` varchar(20) NOT NULL,
+  `gender` varchar(10) NOT NULL,
+  `department` varchar(20) NOT NULL,
   `school` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -94,8 +144,19 @@ CREATE TABLE `Student` (
 -- Dumping data for table `Student`
 --
 
-INSERT INTO `Student` (`sid`, `fname`, `lname`, `email`, `phone`, `gender`, `major`, `school`) VALUES
-(1, 'Kazi', 'Dhrubo', 'zubayerkader@yahoo.com', 7789397961, 'male', 'CMPT', 'SFU');
+INSERT INTO `Student` (`sid`, `fname`, `lname`, `email`, `phone`, `gender`, `department`, `school`) VALUES
+(1, 'Kazi', 'Dhrubo', 'zubayerkader@yahoo.com', 7789397961, 'male', 'CMPT', 'SFU'),
+(2, 'Emran', 'Hossain', 'mdemranh@sfu.ca', 6047263913, 'male', 'BUS', 'SFU'),
+(4, 'Md', 'Ishmam', 'muddin@sfu.ca', 7783876840, 'male', 'cmpt', 'sfu'),
+(5, 'Yasar ', 'Rahman', 'yasarrahman.yr@outlook.com', 7787079802, 'male', 'select', 'sfu'),
+(6, 'fgfgd', 'dfgdfg', 'dfggdf', 432324432, 'male', 'cmpt', 'sfu'),
+(7, 'nffh', 'gfgh', 'gfhfgh', 564546, 'female', 'ensc', 'ubc'),
+(8, 'ghfsghfs', 'fhgfghd', 'fghdhfgd', 12345678, 'female', 'ensc', 'ubc'),
+(10, 'dfds', 'ds', 'ds', 12345678, 'female', 'ensc', 'ubc'),
+(11, '', '', '', 0, 'male', 'select', 'select'),
+(12, 'Shahriar', 'Arefin', 'marefin@sfu.ca', 7789299562, 'male', 'cmpt', 'sfu'),
+(13, 'Ahnaf', 'Tahmid', 'mtahmid@sfu.ca', 7787516706, 'male', 'ensc', 'sfu'),
+(14, 'Irteza', 'Haque', 'aihaque2121@gmail.com', 7783023087, 'male', 'cmpt', 'sfu');
 
 -- --------------------------------------------------------
 
@@ -106,7 +167,7 @@ INSERT INTO `Student` (`sid`, `fname`, `lname`, `email`, `phone`, `gender`, `maj
 CREATE TABLE `StudentLogin` (
   `sid` bigint(4) UNSIGNED NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `password` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -114,7 +175,13 @@ CREATE TABLE `StudentLogin` (
 --
 
 INSERT INTO `StudentLogin` (`sid`, `email`, `password`) VALUES
-(1, 'zubayerkader@yahoo.com', '*84AAC12F54AB666ECFC2A83C676908C8BBC381B1');
+(1, 'zubayerkader@yahoo.com', '$2y$10$FJN9B2LGIJ8cghE7JrQgee3H6lyUh8takuVEfuH1i6SUdR6UhL36q'),
+(7, 'gfhfgh', 'fghfghffgh'),
+(10, 'ds', '$2y$10$OxB0NshX3sHs0mWfCFH0je2ojdxq8wl9TLEJsQUmr/SNOScGNBZKK'),
+(11, '', '$2y$10$00mn1rh/0xZ4i4WQiq3vC.6Fb6oz/bPuxis6hYcdEd78n75rqFRle'),
+(12, 'marefin@sfu.ca', '$2y$10$1zNv7TwY5/Vm6AHNTocsxOIRmcnhlcfv079/3WVc6kEENrOrlX8lu'),
+(13, 'mtahmid@sfu.ca', '$2y$10$son6BPJDiCH5.S1DOYnlhuBnC5swJCMS8wmszfPV2wu2NrXI4ek6e'),
+(14, 'aihaque2121@gmail.com', '$2y$10$iac1/m5pNuLPbVBFiF7MDuWDHFe6uqDglRR614vEkioQ9CQrsab0y');
 
 -- --------------------------------------------------------
 
@@ -128,15 +195,18 @@ CREATE TABLE `Tutor` (
   `lname` varchar(10) NOT NULL,
   `email` varchar(50) NOT NULL,
   `phone` bigint(11) UNSIGNED NOT NULL,
-  `gender` varchar(5) NOT NULL
+  `gender` varchar(5) NOT NULL,
+  `rating` float UNSIGNED NOT NULL,
+  `qualification` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Tutor`
 --
 
-INSERT INTO `Tutor` (`tid`, `fname`, `lname`, `email`, `phone`, `gender`) VALUES
-(1, 'Raad', 'Sarar', 'msarar@sfu.ca', 7789299562, 'male');
+INSERT INTO `Tutor` (`tid`, `fname`, `lname`, `email`, `phone`, `gender`, `rating`, `qualification`) VALUES
+(1, 'Raad', 'Sarar', 'msarar@sfu.ca', 7789299562, 'male', 4.9, 'Undergrad Student'),
+(2, 'Shahriar', 'Arefin', 'marefin@sfu.ca', 7786837912, 'male', 3.9, 'undergrad student');
 
 -- --------------------------------------------------------
 
@@ -155,7 +225,8 @@ CREATE TABLE `TutorLogin` (
 --
 
 INSERT INTO `TutorLogin` (`tid`, `email`, `password`) VALUES
-(1, 'msarar@sfu.ca', '*84AAC12F54AB666ECFC2A83C676908C8BBC381B1');
+(1, 'msarar@sfu.ca', '*84AAC12F54AB666ECFC2A83C676908C8BBC381B1'),
+(2, 'marefin@sfu.ca', '12345678');
 
 -- --------------------------------------------------------
 
@@ -165,18 +236,35 @@ INSERT INTO `TutorLogin` (`tid`, `email`, `password`) VALUES
 
 CREATE TABLE `TutorToCourse` (
   `tid` bigint(4) UNSIGNED NOT NULL,
-  `cid` bigint(4) UNSIGNED NOT NULL,
-  `qualification` varchar(20) NOT NULL,
-  `rating` float NOT NULL,
-  `location` varchar(20) NOT NULL
+  `cid` bigint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `TutorToCourse`
 --
 
-INSERT INTO `TutorToCourse` (`tid`, `cid`, `qualification`, `rating`, `location`) VALUES
-(1, 1, 'Undergrad Student', 4.9, 'Burnaby');
+INSERT INTO `TutorToCourse` (`tid`, `cid`) VALUES
+(1, 1),
+(2, 1),
+(2, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `TutorToLocation`
+--
+
+CREATE TABLE `TutorToLocation` (
+  `tid` bigint(4) UNSIGNED NOT NULL,
+  `lid` int(4) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `TutorToLocation`
+--
+
+INSERT INTO `TutorToLocation` (`tid`, `lid`) VALUES
+(1, 1);
 
 --
 -- Indexes for dumped tables
@@ -186,6 +274,7 @@ INSERT INTO `TutorToCourse` (`tid`, `cid`, `qualification`, `rating`, `location`
 -- Indexes for table `ConnectSTC`
 --
 ALTER TABLE `ConnectSTC`
+  ADD UNIQUE KEY `sid_2` (`sid`,`tid`,`cid`) USING BTREE,
   ADD KEY `sid` (`sid`) USING HASH,
   ADD KEY `tid` (`tid`) USING HASH,
   ADD KEY `cid` (`cid`) USING HASH;
@@ -206,6 +295,22 @@ ALTER TABLE `Department`
   ADD PRIMARY KEY (`did`);
 
 --
+-- Indexes for table `Location`
+--
+ALTER TABLE `Location`
+  ADD PRIMARY KEY (`lid`) USING HASH,
+  ADD KEY `location` (`location`) USING HASH;
+
+--
+-- Indexes for table `Request`
+--
+ALTER TABLE `Request`
+  ADD UNIQUE KEY `sid_2` (`sid`,`tid`,`cid`),
+  ADD KEY `tid` (`tid`) USING HASH,
+  ADD KEY `sid` (`sid`) USING HASH,
+  ADD KEY `cid` (`cid`);
+
+--
 -- Indexes for table `Student`
 --
 ALTER TABLE `Student`
@@ -224,7 +329,9 @@ ALTER TABLE `StudentLogin`
 --
 ALTER TABLE `Tutor`
   ADD PRIMARY KEY (`tid`) USING HASH,
-  ADD UNIQUE KEY `email` (`email`) USING HASH;
+  ADD UNIQUE KEY `email` (`email`) USING HASH,
+  ADD KEY `rating` (`rating`) USING BTREE,
+  ADD KEY `qualification` (`qualification`) USING HASH;
 
 --
 -- Indexes for table `TutorLogin`
@@ -237,8 +344,17 @@ ALTER TABLE `TutorLogin`
 -- Indexes for table `TutorToCourse`
 --
 ALTER TABLE `TutorToCourse`
-  ADD UNIQUE KEY `cid` (`cid`),
-  ADD UNIQUE KEY `tid` (`tid`);
+  ADD UNIQUE KEY `tid_2` (`tid`,`cid`),
+  ADD KEY `cid` (`cid`) USING HASH,
+  ADD KEY `tid` (`tid`) USING HASH;
+
+--
+-- Indexes for table `TutorToLocation`
+--
+ALTER TABLE `TutorToLocation`
+  ADD UNIQUE KEY `tid_2` (`tid`,`lid`),
+  ADD KEY `tid` (`tid`) USING HASH,
+  ADD KEY `lid` (`lid`) USING HASH;
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -248,7 +364,7 @@ ALTER TABLE `TutorToCourse`
 -- AUTO_INCREMENT for table `Course`
 --
 ALTER TABLE `Course`
-  MODIFY `cid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `Department`
@@ -257,16 +373,22 @@ ALTER TABLE `Department`
   MODIFY `did` int(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `Location`
+--
+ALTER TABLE `Location`
+  MODIFY `lid` int(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `Student`
 --
 ALTER TABLE `Student`
-  MODIFY `sid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `sid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `Tutor`
 --
 ALTER TABLE `Tutor`
-  MODIFY `tid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tid` bigint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -285,6 +407,14 @@ ALTER TABLE `ConnectSTC`
 --
 ALTER TABLE `Course`
   ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`did`) REFERENCES `Department` (`did`);
+
+--
+-- Constraints for table `Request`
+--
+ALTER TABLE `Request`
+  ADD CONSTRAINT `request_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`),
+  ADD CONSTRAINT `request_ibfk_2` FOREIGN KEY (`sid`) REFERENCES `Student` (`sid`),
+  ADD CONSTRAINT `request_ibfk_3` FOREIGN KEY (`cid`) REFERENCES `Course` (`cid`);
 
 --
 -- Constraints for table `StudentLogin`
@@ -306,3 +436,10 @@ ALTER TABLE `TutorLogin`
 ALTER TABLE `TutorToCourse`
   ADD CONSTRAINT `tutortocourse_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`),
   ADD CONSTRAINT `tutortocourse_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `Course` (`cid`);
+
+--
+-- Constraints for table `TutorToLocation`
+--
+ALTER TABLE `TutorToLocation`
+  ADD CONSTRAINT `tutortolocation_ibfk_1` FOREIGN KEY (`lid`) REFERENCES `Location` (`lid`),
+  ADD CONSTRAINT `tutortolocation_ibfk_2` FOREIGN KEY (`tid`) REFERENCES `Tutor` (`tid`);

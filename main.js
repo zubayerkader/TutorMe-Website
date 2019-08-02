@@ -59,18 +59,53 @@ function studentSignUp()
 	document.getElementById("demo1").innerHTML = data;
 
 	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "http://localhost:8888/main.php", true);
+	xhr.open("POST", "http://localhost:8888/studentSignUp.php", true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () 
 	{
 	    if (this.readyState == 4 && this.status == 200) 
 			document.getElementById("demo2").innerHTML = this.responseText;
+		//document.write(this.responseText);
 	};
 	xhr.send(data);
 }
 
-function studentSignIn(){
-	alert("abcd");
+function studentSignIn()
+{
+
+	var Email = document.getElementById("email").value;
+
+	var Pass = document.getElementById("pass").value;
+
+	var obj = {
+		email: Email,
+		pass: Pass,
+	};
+
+	var data = JSON.stringify(obj);
+	
+	//document.getElementById("demo1").innerHTML = data;
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "http://localhost:8888/studentSignIn.php", true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = function () 
+	{
+	    if (this.readyState == 4 && this.status == 200) 
+	    {
+			var resultText = this.responseText;
+			document.getElementById("demo2").innerHTML = resultText;
+			//document.write(this.responseText);
+			if (resultText == "Password is valid!")//.indexOf("valid") > 0)
+			{
+
+				//document.getElementById("demo2").innerHTML = this.responseText;
+				window.location.href = "http://localhost:8888/studentDashboard.php";
+			}
+		}
+	};
+	xhr.send(data);
+	
 }
 
 function tutorSignIn(){}
